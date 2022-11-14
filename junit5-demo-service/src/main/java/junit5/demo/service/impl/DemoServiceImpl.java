@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import junit5.demo.service.CheckService;
 import junit5.demo.service.DemoService;
+import junit5.demo.service.PersistenceService;
 import junit5.demo.service.utils.ResultUtils;
 
 /**
@@ -33,12 +34,16 @@ public class DemoServiceImpl implements DemoService {
     @Resource
     private CheckService checkService;
 
+    @Resource
+    private PersistenceService persistenceService;
+
     @Override
     public String getResponse(String type) {
         String result = getResult(type);
         if (!checkService.isLegal(result)) {
             throw new RuntimeException("Not legal");
         }
+        persistenceService.save(type);
         return result;
     }
 

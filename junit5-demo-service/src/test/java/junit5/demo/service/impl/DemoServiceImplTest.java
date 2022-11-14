@@ -13,10 +13,12 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
+import org.mockito.internal.verification.Times;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import junit5.demo.service.CheckService;
+import junit5.demo.service.PersistenceService;
 import junit5.demo.service.utils.ResultUtils;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -34,6 +36,9 @@ class DemoServiceImplTest {
 
     @Mock
     private CheckService checkService;
+
+    @Mock
+    private PersistenceService persistenceService;
 
     private final String applicationName = "junit5-demo";
 
@@ -53,6 +58,8 @@ class DemoServiceImplTest {
             dateTimeMockedStatic.when(LocalDateTime::now).thenReturn(parse);
             Mockito.when(checkService.isLegal(Mockito.any())).thenReturn(true);
             assertEquals("Too Late", demoService.getResponse(type));
+            //verify
+            Mockito.verify(persistenceService, Mockito.times(1)).save(type);
         }
     }
 
